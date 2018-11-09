@@ -1,0 +1,41 @@
+<section>
+VmInclude:__COMPONENT__/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //------------------------
+        VmInclude:__COMPONENT__/grid/grid.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //------------------------
+        _fields='Registration ID,Randomisation_Number,Screening_Number,Subject_Initials,Gender,DOB,Week_1,Week_2,Week_3'
+        //------------------------
+        var participant_pid=_module.var.participant;
+        //-------------------------------------
+        $('#D__ID').on('load',function(){    _set_req(); _request_data(); })
+        $('#D__ID').on('back',function(){    _set_req(); _request_data(); })
+        //-------------------------------------
+        var _set_req=function(){
+            $('#new__ID').hide();$('#save__ID').hide();
+            //-------------------
+            var sql="with tb as (select Week_1=S1,Week_2=S2,Week_3=S2,RN=V1 from [TABLE-"+_db_pid+"]) ";
+            sql+="select Information,Week_1,Week_2,Week_3,ID from [TABLE-"+participant_pid+"] join tb on RN=V1 ";
+            //-------------------
+            _req={cmd:'query_records',sql:sql}
+        }
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+            }
+        }
+
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/grid/grid.css
+    .ui-autocomplete {
+         z-index: 9999 !important;
+    }
+    .ui-menu-item:hover{
+        color:red;
+        font-weight: 200;
+    }
+</style>

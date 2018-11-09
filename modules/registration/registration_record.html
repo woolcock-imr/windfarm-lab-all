@@ -1,0 +1,135 @@
+<section>
+    VmInclude:__COMPONENT__/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__COMPONENT__/grid/grid.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //-------------------------------------
+        //_fields="_Form|form_module,Screening_Number,Clinical Screening Number|Screening_ID,Screening_Participant_ID|spUID,First_Name,Last_Name,Phone_Number,Email,Postcode,Location,Study_find,Study_find_other";
+        //_fields+=",Submit Date|DateTime,Submitted by|Author,_Delete";
+
+		_fields ="_Form|form_module,Screening_Number,Clinical Screening Number|Screening_ID,_gridHidden|Registration_ID|UID,Screening_Participant_ID|spUID";
+		_fields+=",First_Name,Last_Name,Phone_Number,Email,Postcode";
+		_fields+=",_gridHidden|Study_find,_gridHidden|Study_find_other";
+		_fields+=",_gridHidden|Comments";
+        _fields+=",Submit Date|DateTime,Submitted by|Author,_Delete";
+
+		_fields_e="Screening_Number,Clinical Screening Number|Screening_ID,Registration_ID|UID,Screening_Participant_ID|spUID";
+		_fields_e+="First_Name,Last_Name,Phone_Number,Email,Postcode,Study_find,Study_find_other,Comments,Submit Date|DateTime,Submitted by|Author";
+
+		//-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+				/*
+                case 'Registration_ID':
+                    records[I].vm_readonly[field]=true;
+                    td.html(records[I].UID);
+                    break;
+					*/
+				case 'Screening_Participant_ID':
+                    records[I].vm_readonly[field]=true;
+                    //td.html(records[I].UID);
+                    break;
+                case 'Baseline_study_date':
+                    VmInclude:__COMPONENT__/grid/field_date.js
+                    break;
+                case 'Study_find':
+                    var html="<select style='border:0;''>\
+                        <option value='1' >Woolcock Institute Website</option>\
+                        <option value='2' >Sleep Physician Referral</option>\
+                        <option value='3' >Advertising Flier</option>\
+                        <option value='4' >Internet Search</option>\
+                        <option value='5' >Facebook</option>\
+                        <option value='6' >LinkedIn</option>\
+                        <option value='7' >Twitter</option>\
+                        <option value='8' >University website</option>\
+                        <option value='9' >Radio</option>\
+                        <option value='10' >TV</option>\
+                        <option value='11' >Newspaper Article</option>\
+                        <option value='12' >Word of Mouth</option>\
+                        <option value='13' >Not specified</option>\
+                        <option value='14' >Sleep Health Foundation Website</option>\
+                        <option value='15' >Received an email</option>\
+                        <option value='16' >GP</option>\
+                        <option value='17' >Pharmacy</option>\
+                        <option value='18' >Other</option>\
+                    </select>\
+                    ";
+                    VmInclude:__COMPONENT__/grid/field_select.js
+                break;
+                case 'Consent_approached_research':
+                case 'Eligible':
+                case 'Face_Face_Screening_Consent':
+                case 'Baseline_Consent':
+                    var html="<select style='border:0;''>"
+                    html+="<option value=''>---</option>";
+                    html+="<option value='Yes'>Yes</option>";
+                    html+="<option value='No'>No</option>";
+                    html+="</select>";
+                    VmInclude:__COMPONENT__/grid/field_select.js
+                break;
+            }
+        }
+        //-------------------------------------
+        /*
+        _data_process=function(){
+            for(var i=0;i<_records.length;i++){
+                _records[i].Recruitment_ID=_records[i].UID;
+            }
+        }
+        */
+        //-------------------------------------
+        /*
+        _after_submit=function(I,res,n,_dbv){
+            if(res.uid!==undefined){
+alert("REG UID="+res.uid);
+                create_screening_participant_record(res);
+            }
+        }
+        //-------------------------------------
+        var create_screening_participant_record=function(res){
+            var registration_id=res.uid;
+            var screening_participant_pid="20008478";
+            var login_setup_pid="20008479";
+            var row_data={Registration_ID:registration_id};
+            var dbv={S1:registration_id};
+
+            var req={cmd:"add_record",db_pid:screening_participant_pid,data:row_data,dbv:dbv};
+            $VmAPI.request({data:req,callback:function(res2){
+                create_screening_participant_setup_record(res2);
+            }})
+        }
+        //-------------------------------------
+        var create_screening_participant_setup_record=function(res){
+alert("SP UID="+res.uid);
+            var username=res.uid+"-"+login_setup_pid;
+            var password=$vm.vm_password(8,false);
+            var List="20008448,20008449,20008450,20008451,20008452,20008453,20008454,20008455,20008456,20008457,20008458,20008459,20008460,20008461,20008462,20008463,20008464,20008465,20008466,20008467,20008468,20008469,20008470,20008471,20008472,20008473,20008474,20008475,20008476";
+            var data1={Login_ID:username,Password:password,List:List};
+            var dbv1={PUID:res.uid,S2:username,S3:password};
+            var req={cmd:"add_record",db_pid:screening_participant_pid,data:row_data,dbv:dbv};
+            $VmAPI.request({data:req,callback:function(res2){
+alert("DONE");
+                //send email here
+            }})
+        }
+        */
+        //-------------------------------------
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        $('#D__ID').on('back',function(){  _set_req(); _request_data(); })
+        //-------------------------------------
+		_set_req=function(){
+			var sql="with screening_participant as (select spS1=S1,spUID=UID from [TABLE-20009058] )";
+		    sql+=",tb as (select spUID,Information,ID,UID,PUID,DateTime,Author,RowNum=row_number() over (order by ID DESC) from [TABLE-"+_db_pid+"-@S1] join screening_participant on spS1=convert(varchar,UID) )";
+		    sql+="select spUID,Information,ID,UID,PUID,DateTime,Author,RowNum from tb where RowNum between @I6 and @I7";
+		    var sql_n="select count(ID) from [TABLE-"+_db_pid+"-@S1]";
+		    _req={cmd:'query_records',db_pid:_db_pid,sql:sql,sql_n:sql_n,s1:'"'+$('#keyword__ID').val()+'"',I:$('#I__ID').text(),page_size:$('#page_size__ID').val()}
+		}
+		//-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/grid/grid.css
+</style>

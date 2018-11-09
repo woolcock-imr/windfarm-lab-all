@@ -1,0 +1,70 @@
+<section class='w3s'>
+<div class="w3-container w3-content w3-row">
+    <form id=F__ID>
+        <div class="w3-container w3-half w3-padding-0" >
+            <figure class="w3-left w3-margin-0  w3-padding-right w3-padding-top"><img src="__BASE__/woolcock-imr/windfarm/images/windfarm.jpg" style='width:470px'></figure>
+        </div>
+        <div class="w3-container w3-half">
+            <h3 class="w3-xlarge">Do Wind Farms cause health effects? </h3>
+                    <b><i>Do you find yourself easily annoyed with noise?<br>
+                    <Br>
+                    Not able to concentrate or operate properly in a noisy environment?</b><br><br></i>
+                    You may be eligible to participate in a research study that is being conducted at the<b> Woolcock institute of Medical Research in Glebe, Sydney.</b>
+                    <br>
+                    <br>
+                    This study will be investigating the effects on sleep and various aspects of health  when being exposed to the sound that comes from Wind farms (called infrasound) and traffic noise when compared to silence.<br>
+                    <br>The study will take place over the course of 3 weekend stays in our sleep centre separated by at least 11 days in between each visit.
+                    <br>
+                    <br>
+                    Click on <i><b>'Register now'</b></i> below to register your interest and fill the appropriate details.
+                    <br><br>
+                    After successfully completing our questionnaire we will be in contact with you shortly in regards to your eligibility for the study and guide you through the next steps of the process.
+                    <br><br>
+                    For more information, we encourage you to go to our <u style='cursor:pointer' id=faq__ID ><b>Frequently Asked Questions</b></u> page.
+                    <br>
+                    <br>
+                    Thank you for your interest and for taking the time to be involved.
+                    <br>
+                    <br>
+            <div class="w3-container">
+                <div><input type=button id=register__ID value='Register now!' /></div>
+            </div>
+            <div class="w3-quarter">
+            <figure class="w3-padding-left"><img id=logo__ID src="__BASE__/woolcock-imr/windfarm/images/logo_mm.jpg" style='width:260px;margin-left:40px;'></figure>
+        </div>
+        </div>
+
+        </form>
+    </div>
+</section>
+<script>
+    function F__ID(){
+        var _op,_module=$vm.module_list[$vm.vm['__ID'].name];
+        $('#register__ID').on('click',function(){
+            $vm.load_module_by_name(_module.var.external_registration,$vm.root_layout_content_slot,{});
+        })
+        $('#faq__ID').on('click',function(){
+            $vm.load_module_by_name(_module.var.registration_faq,$vm.root_layout_content_slot,{});
+        })
+    }
+</script>
+<style>
+    VmInclude:__BASE__/woolcock-imr/windfarm/assets/w3.css
+
+
+.w3s input[type=button] {
+    width: 100%;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #428bca;
+    border-color: #357ebd;
+    font-size: 34px
+}
+.w3s input[type=button]:hover {
+    background-color: #357ebd;
+}
+</style>

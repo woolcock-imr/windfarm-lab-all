@@ -1,0 +1,40 @@
+<div>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=nav_link__ID></span>
+    </div>
+    <div style='clear:left;'>
+        <div class='nav__ID'>
+            <ul>
+                <li data-name=woolcock_windfarm_main_in_lab>In Lab</li>
+                <li data-name=woolcock_windfarm_main_recruitment>Recruitment</li>
+                <li data-name=woolcock_windfarm_main_screening>Screening</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    function F__ID(){
+        //---------------------------------------------
+        var L=$vm.module_list,B=$vm.hosting_path+'/woolcock-imr/windfarm';
+        L.woolcock_windfarm_main_in_lab         ={table_id:'',url:B+'/modules/navigation/in_lab.html'};
+        L.woolcock_windfarm_main_recruitment    ={table_id:'',url:B+'/modules/navigation/recruitment.html'};
+        L.woolcock_windfarm_main_screening      ={table_id:'',url:B+'/modules/navigation/screening.html'};
+        //---------------------------------------------
+        var content_slot=$vm.root_layout_content_slot;
+        VmInclude:__COMPONENT__/navigation/navigation.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //---------------------------------------------
+        $('#D__ID').on('load',function(){
+            _nav_name='Wind Farm';
+            _set_nav_link();
+            //_set_permissions();
+        });
+        //---------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/navigation/navigation.css
+    #D__ID{
+        background: url("__HOST__/images//texture.png");
+    }
+</style>

@@ -1,0 +1,118 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a>
+        <input type=text id=Participant__ID placeholder='select a participant' style='width:200px' />
+        <!-- <input type=text id=Participant_uid__ID style='width:50px' readonly />-->
+        <a id=query_data__ID >Query</a>
+        <!--<a id=export__ID >Export</a>-->
+    	<span class=tab__ID></span>Individual Data
+        <span id=elapsed__ID style='float:right'></span>
+    </div>
+    <span id=grid__ID></span>
+</section>
+<script>
+    function F__ID(){
+        //------------------------
+        VmInclude:__COMPONENT__/grid/grid.js
+        VmInclude:__BASE__/woolcock-imr/windfarm/modules/navigation/report_task_list.js
+        //------------------------
+        _fields='Task,Number'
+        //------------------------
+        var participant_pid=_module.var.participant;
+        //------------------------
+        $('#Participant__ID').autocomplete({
+            minLength:0,
+            source:function(request,response){
+                var sql="with tb as (select name=@('Registration_ID'),value2=S1,value3=S1 from [FORM-"+participant_pid+"])";
+                sql+=" select top 10 name,value=name,value2,value3 from tb where Name like '%'+@S1+'%' ";
+                $VmAPI.request({data:{cmd:'auto',s1:request.term,sql:sql,minLength:0},callback:function(res){
+                    response($vm.autocomplete_list(res.table));
+                }});
+            },
+            /*
+            select: function(event,ui){
+                $('#Participant_uid__ID').val(ui.item.value2);
+            }
+            */
+        })
+        $('#Participant__ID').focus(function(){$('#Participant__ID').autocomplete("search","");});
+        //-------------------------------------
+        $('#query_data__ID').on('click',function(){     query_data();                  })
+        //------------------------
+        var TXT,iN,tN;
+        var query_data=function(){
+            var puid=$('#Participant__ID').val();
+            if(puid==""){
+                $vm.alert("No participant was selected");
+                return;
+            }
+            var list=[
+                    'woolcock_windform_screening_consent',
+                    'woolcock_windform_screening_general_information',
+                    'woolcock_windform_screening_ethnicity',
+                    'woolcock_windform_screening_shiftwork',
+                    'woolcock_windform_screening_weinstein_noise_sensitivity_score',
+                    'woolcock_windform_screening_insomnia',
+                    'woolcock_windform_screening_lifestyle',
+                    'woolcock_windform_screening_medical_history',
+                    'woolcock_windform_screening_medication',
+                    'woolcock_windform_screening_sleep_disorders_and_patterns',
+                    'woolcock_windform_screening_ess',
+                    'woolcock_windform_screening_homecq',
+                    'woolcock_windform_screening_kessler',
+                    'woolcock_windform_screening_dass',
+                    'woolcock_windform_screening_claustrophobia_rs_scale',
+                    'woolcock_windform_screening_connor_davidson_resilence',
+                    'woolcock_windform_screening_eysneck',
+                    'woolcock_windform_screening_hwpq',
+                    'woolcock_windform_screening_tinnitus',
+                    'woolcock_windform_screening_dizziness',
+                    'woolcock_windform_screening_consent2',
+            ];
+            TXT="";iN=0;tN=list.length;
+            for(var i=0;i<list.length;i++){
+                var pid=$vm.module_list[list[i]].table_id;
+                TXT+="<b>"+list[i].replace('woolcock_windform_screening_','')+"</b><br>"+"@"+pid+"@<br><br>";
+            }
+            for(var i=0;i<list.length;i++){
+                var pid=$vm.module_list[list[i]].table_id;
+                get_data(pid,puid);
+            }
+        }
+        var get_data=function(pid,puid){
+            var sql="select Information from [TABLE-"+pid+"] where puid=@I1";
+            $VmAPI.request({data:{cmd:'query_records',sql:sql,i1:puid},callback:function(res){
+                if(res.records.length==1){
+                    var txt="";
+                    for(k in res.records[0]){
+                        if(k!='Participant' && k!='Participant_uid' && k!='form_module' && k!='NT' && k!='DateTime' && k!='Author')
+                        txt+=k+"="+res.records[0][k]+"<br>";
+                    }
+                    TXT=TXT.replace("@"+pid+"@",txt);
+
+                    displat_data();
+                }
+                else{
+                    TXT=TXT.replace("@"+pid+"@",'No data');
+                    displat_data();
+                }
+            }});
+        }
+        var displat_data=function(){
+            iN++;
+            if(iN==tN){
+                $('#grid__ID').html(TXT);
+            }
+        }
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/grid/grid.css
+    .ui-autocomplete {
+         z-index: 9999 !important;
+    }
+    .ui-menu-item:hover{
+        color:red;
+        font-weight: 200;
+    }
+</style>

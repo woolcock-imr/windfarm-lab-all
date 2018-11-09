@@ -1,0 +1,163 @@
+<div>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=nav_link__ID></span>
+    </div>
+    <div style='clear:left;'>
+        <div class='nav__ID'>
+            <span>Participants</span>
+            <ul>
+                <li data-name=participant>Participants</li>
+            </ul>
+            <br>
+            <span>Notes</span>
+            <ul>
+                <li data-name=notes>All Task Notes</li>
+            </ul>
+            <br>
+            <span>Paticipant Visit Booking Calendar</span>
+            <ul>
+                <li data-name=daily>Daily</li>
+                <li data-name=weekly>Weekly</li>
+                <li data-name=monthly>Monthly</li>
+            </ul>
+            <br>
+            <span>Booking Records</span>
+            <ul>
+                <li data-name=booking_record>Booking Records</li>
+            </ul>
+            <br>
+            <span>Randomisation</span>
+            <ul>
+                <li data-name=randomisation>Randomisation List</li>
+                <li data-name=randomised>Randomised</li>
+            </ul>
+            <br>
+            <span>Practice Tests</span>
+            <ul>
+                <li data-name=N2back_practice>N Back Practice</li>
+                <li data-name=tol_practice>Tower of London Practice </li>
+            </ul>
+<br>
+
+            <!--
+            <span>Query</span>
+            <ul>
+                <li data-name=query_overall_progress>Overall Progress</li>
+                <li data-name=query_individual_progress>Individual Progress</li>
+            </ul>
+            <br>
+            <span>Chart</span>
+            <ul>
+                <li data-name=chart_overall_progress>Overall Progress</li>
+                <li data-name=chart_individual_progress>Individual Progress</li>
+            </ul>
+        -->
+        </div>
+		VmInclude:__CURRENT_PATH__/in_lab_task_links.html
+    </div>
+</div>
+<script>
+    //---------------------------------------------
+    function F__ID(){
+        //---------------------------------------------
+        VmInclude:__COMPONENT__/navigation/navigation.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //---------------------------------------------
+        var _module_list=function(){
+			_app_id='woolcock_windform_in_lab_';
+            var L=$vm.module_list,A=_app_id, B='https://rt.woolcock.org.au/github/woolcock-imr/windfarm';
+			if(window.location.hostname=='127.0.0.1' || window.location.hostname=='localhost'){
+				B=window.location.protocol+'//'+window.location.host+'/woolcock-imr/windfarm';
+			}
+			else if(window.location.hostname=='rt.woolcock.org.au'){
+				B='https://rt.woolcock.org.au/github/woolcock-imr/windfarm'
+			}
+			else{
+				B='https://cbs.wappsystem.com/dev/github/woolcock-imr/windfarm';
+			}
+            var v={
+                app_id:_app_id,
+
+                participant:            '20008848',
+                notes:                  '20008850',
+                site_filter:            '0',
+                participant_login_setup:'20008849',
+                participant_login_setup_module:         'woolcock_windform_in_lab_participant_login_setup',
+                participant_quest_data_entry_module:    'woolcock_windform_in_lab_participant_data_entry',
+                notes_module:                           'woolcock_windform_in_lab_notes',
+
+                navigation_data_entry:          'woolcock_windform_navigation_data_entry',
+
+                booking_record_module:          'woolcock_windform_in_lab_booking_record',
+                booking_daily_module:           'woolcock_windform_in_lab_daily',
+                booking_weekly_module:          'woolcock_windform_in_lab_weekly',
+                booking_monthly_module:         'woolcock_windform_in_lab_monthly',
+            }
+            L[A+'booking_record']=              {table_id:'20008851',var:v,url:B+'/modules/booking/booking_record.html'};
+            L[A+'daily']=                       {table_id:'20008851',var:v,url:B+'/modules/calendar/daily.html',record_name:'booking_record'};
+            L[A+'weekly']=                      {table_id:'20008851',var:v,url:B+'/modules/calendar/weekly.html',record_name:'booking_record',daily:'daily'};
+            L[A+'monthly']=                     {table_id:'20008851',var:v,url:B+'/modules/calendar/monthly.html',record_name:'booking_record',daily:'daily'};
+            L[A+'query_overall_progress']=      {table_id:'',var:v,url:B+'/modules/query/overall_progress.html'};
+            L[A+'query_individual_progress']=   {table_id:'',var:v,url:B+'/modules/query/individual_progress.html'};
+            L[A+'chart_overall_progress']=      {table_id:'',var:v,url:B+'/modules/chart/overall_progress.html'};
+            L[A+'chart_individual_progress']=   {table_id:'',var:v,url:B+'/modules/chart/individual_progress.html'};
+
+            L[A+'data_entry_by_staff']=                  {table_id:'--------',var:v,url:B+'/modules/navigation/in_lab_data_entry_by_staff.html'};
+            L[A+'data_entry_by_participant']=            {table_id:'--------',var:v,url:B+'/modules/navigation/in_lab_data_entry_by_participant.html'};
+            L[A+'randomisation']=              {table_id:'20010672',var:v,url:B+'/modules/task_inlab/randomisation_import.html'};
+            L[A+'randomised']=              {table_id:'20010672',var:v,url:B+'/modules/query/randomised_query.html'};
+            //VmInc lude:__BA SE__/woolcock-imr/windfarm/modules/navigation/in_lab_participant_and_task_module_list.js
+			VmInclude:__CURRENT_PATH__/in_lab_participant_and_task_module_list.js
+        }
+        _module_list();
+        _set_li_permissions();
+        //---------------------------------------------
+        $('#D__ID').on('load',function(){
+            _nav_name='In Lab';
+            _set_nav_link();
+        });
+        //---------------------------------------------
+        $('.nav__ID div').hide();
+        //---------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/navigation/navigation.css
+    #D__ID{
+        background: url("__HOST__/images/fresh_snow.png");
+    }
+
+
+    #toolbar__ID *{
+        margin:0;
+        padding:0;
+        vertical-align:middle;
+    }
+    #toolbar__ID{
+        padding:6px;
+        background-color:#ddd;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size:11pt;
+        border-bottom: 1px solid #aaa;
+    }
+    #toolbar__ID a{
+        background-color:#697b7b;
+        border:0px solid #18ab29;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font: 9pt/30px Arial;
+        padding-left:15px;
+        padding-right:15px;
+        text-decoration:none;
+        text-shadow:1px 1px 0px #2f6627;
+        -moz-border-radius:8px;
+        -webkit-border-radius:8px;
+        border-radius:8px;
+        transition: all 0.2s ease-in-out;
+    }
+    #toolbar__ID a:hover {
+      background-color:#525959;
+    }
+    
+</style>

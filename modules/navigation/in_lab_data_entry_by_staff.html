@@ -1,0 +1,82 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=name__ID></span>
+    </div>
+    VmInclude:__BASE__/woolcock-imr/windfarm/modules/navigation/in_lab_task_links.html
+</section>
+<script>
+    function F__ID(){
+          //---------------------------------------------
+          VmInclude:__COMPONENT__/navigation/navigation.js
+          VmInclude:__COMPONENT__/style/ease-in-out.js
+          var _op,_module=$vm.module_list[$vm.vm['__ID'].name],_app_id=_module.var.app_id;
+          //---------------------------------------------
+          $('#D__ID').on('load',function(){
+              _op=$vm.vm['__ID'].op;
+              $('#name__ID').text($vm.vm['__ID'].op.participant_name);
+              _set_permissions();
+              $('.nav__ID li').each(function(){
+                  $(this).attr('data-s','1');
+              })
+              $('.nav__ID li').css('color','#000000');
+              get_task_with_data(0,99);
+              get_task_with_data(100,199);
+          });
+          //---------------------------------------------
+          $('#D__ID').on('back',function(){ $('.nav__ID li').css('color','#000000'); get_task_with_data(0,99); get_task_with_data(100,199); })
+          //---------------------------------------------
+          var get_task_with_data=function(n1,n2){
+              var pids="";
+              var participant_uid=$vm.vm['__ID'].op.participant_uid;
+              $('.nav__ID li').each(function(){
+                  var data_name=_app_id+$(this).attr('data-name');
+                  if($vm.module_list[data_name]!==undefined && $vm.module_list[data_name].table_id!==undefined){
+                      if($vm.module_list[data_name].table_id!='--------' && $vm.module_list[data_name].table_id!=''){
+                          if(pids!=='') pids+=",";
+                          pids+=$vm.module_list[data_name].table_id;
+                      }
+                  }
+              })
+              if(pids==='') return;
+              var pids_array=pids.split(',');
+              var sql="";
+              //-------------------------
+              if(n1<pids_array.length){
+                  for(var i=n1;i<pids_array.length && i<n2;i++){
+                      if(sql!=='') sql+=" union ";
+                      sql+="select PID,Number=count(ID) from [TABLE-"+pids_array[i]+"] where puid="+participant_uid+" group by PID";
+                  }
+                  $VmAPI.request({data:{cmd:'query_records',sql:sql},callback:function(res){
+                      $('.nav__ID li').each(function(){
+                          //$(this).css('color','#000000');
+                          var data_name=_app_id+$(this).attr('data-name');
+                          if($vm.module_list[data_name]!==undefined && $vm.module_list[data_name].table_id!==undefined){
+                              var pidA=$vm.module_list[data_name].table_id;
+                              for(var i=0;i<res.records.length;i++){
+                                  var pidB=res.records[i]['PID'];
+                                  if(pidA==pidB){
+                                      var num=res.records[i]['Number'];
+                                      $(this).css('color','#5a99dc');
+                                  }
+                              }
+                          }
+                      })
+                  }})
+              }
+              //-------------------------
+          }
+          //---------------------------------------------
+          _special_click_process=function(li){
+              var data_name=_app_id+$(li).attr('data-name');
+              $vm.load_module_by_name(data_name,$vm.root_layout_content_slot,{participant_uid:_op.participant_uid,participant_name:_op.participant_name})
+          }
+          //---------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/navigation/navigation.css
+	VmInclude:__COMPONENT__/style/ease-in-out_2.css
+	#D__ID{
+        background: url("__HOST__/images/fresh_snow.png");
+    }
+</style>

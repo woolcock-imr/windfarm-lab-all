@@ -1,0 +1,101 @@
+<div>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=nav_link__ID></span>
+    </div>
+    <div style='clear:left;'>
+        <div class='nav__ID'>
+            <span>Participants</span>
+            <ul>
+                <li data-name=participant data-s=1>Participants</li>
+            </ul>
+            <br>
+        </div>
+        VmInclude:__CURRENT_PATH__/screening_task_links.html
+    </div>
+</div>
+<script>
+    function F__ID(){
+        //---------------------------------------------
+        VmInclude:__COMPONENT__/navigation/navigation.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //---------------------------------------------
+        //---------------------------------------------
+        var _module_list=function(){
+			_app_id='woolcock_windform_screening_';
+			var L=$vm.module_list,A=_app_id, B='https://rt.woolcock.org.au/github/woolcock-imr/windfarm';
+			if(window.location.hostname=='127.0.0.1' || window.location.hostname=='localhost'){
+				B=window.location.protocol+'//'+window.location.host+'/woolcock-imr/windfarm';
+			}
+			else if(window.location.hostname=='rt.woolcock.org.au'){
+				B='https://rt.woolcock.org.au/github/woolcock-imr/windfarm'
+			}
+			else{
+				B='https://cbs.wappsystem.com/dev/github/woolcock-imr/windfarm';
+			}
+            var v={
+                app_id:_app_id,
+
+                participant:'20009058',
+                screening_participant:'20009058',
+                screening_participant_login_setup:'20009059',
+                notes:'20008850',//should have a new pid just for screening task
+                screening_participant_login_setup_module:'woolcock_windform_screening_participant_login_setup',
+                screening_participant_quest_data_entry_module:'woolcock_windform_screening_participant_data_entry',
+                notes_module:                       'woolcock_windform_in_lab_notes',
+            }
+
+            L[A+'data_entry_by_staff']=                  {table_id:'--------',var:v,url:B+'/modules/navigation/screening_data_entry_by_staff.html'};
+            L[A+'data_entry_by_participant']=            {table_id:'--------',var:v,url:B+'/modules/navigation/screening_data_entry_by_participant.html'};
+            VmInclude:__CURRENT_PATH__/screening_participant_and_task_module_list.js
+        }
+        _module_list();
+		_set_li_permissions();
+        //---------------------------------------------
+        $('#D__ID').on('load',function(){
+            _nav_name='Screening';
+            _set_nav_link();
+            //_set_permissions();
+        });
+        //---------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/navigation/navigation.css
+    #D__ID{
+        background: url("__HOST__/images//texture.png");
+    }
+
+
+    #toolbar__ID *{
+        margin:0;
+        padding:0;
+        vertical-align:middle;
+    }
+    #toolbar__ID{
+        padding:6px;
+        background-color:#ddd;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size:11pt;
+        border-bottom: 1px solid #aaa;
+    }
+    #toolbar__ID a{
+        background-color:#697b7b;
+        border:0px solid #18ab29;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font: 9pt/30px Arial;
+        padding-left:15px;
+        padding-right:15px;
+        text-decoration:none;
+        text-shadow:1px 1px 0px #2f6627;
+        -moz-border-radius:8px;
+        -webkit-border-radius:8px;
+        border-radius:8px;
+        transition: all 0.2s ease-in-out;
+    }
+    #toolbar__ID a:hover {
+      background-color:#525959;
+    }
+    
+</style>

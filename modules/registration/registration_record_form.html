@@ -1,0 +1,95 @@
+<section>
+    VmInclude:__COMPONENT__/toolbar/back_save.html
+    <form id=F__ID>
+        <table id=tb__ID style='width:900px;'>
+             <colgroup><col class=colA style='width:260px' /><col /></colgroup>
+             <tr><td colspan=2 class='header__ID'>Registration Records</td></tr>
+             <tr><td>CRC ID</td><td data-id=CRC_ID></td></tr>
+             <tr><td>Recruitment ID</td><td data-id=Recruitment_ID readonly></td></tr>
+             <tr><td>First Name</td><td data-id=First_Name></td></tr>
+             <tr><td>Last Name</td><td data-id=Last_Name></td></tr>
+             <tr><td>Phone Number (Mobile)</td><td data-id=Phone_Number></td></tr>
+             <tr><td>Home Phone</td><td data-id=Home_Phone></td></tr>
+             <tr><td>Email</td><td data-id=Email></td></tr>
+             <tr><td>Postcode</td><td data-id=Postcode></td></tr>
+             <tr><td>Location</td><td data-id=Location></td></tr>
+             <tr><td>Study_find</td><td data-id=Study_find></td></tr>
+             <tr><td>Study find other</td><td data-id=Study_find_other></td></tr>
+             <tr><td>MRN #</td><td data-id=MRN_no></td></tr>
+             <tr><td>Baseline Study Date</td><td data-id=Baseline_study_date></td></tr>
+             <tr><td>Sample</td><td data-id=Sample></td></tr>
+             <tr><td>Comments</td><td data-id=Comments></td></tr>
+             <tr><td>Agrees to be approached for research?</td><td data-id=Consent_approached_research data-custom=1>
+                 <input name=Consent_approached_research id=Consent_approached_research type=radio value='Yes' />Yes
+                 &nbsp;&nbsp;&nbsp;<input name=Consent_approached_research type=radio value='No' />No
+            </td></tr>
+             <tr><td>Comments2</td><td data-id=Comments2></td></tr>
+             <tr><td>1st Contact Date</td><td data-id=First_Contact_date></td></tr>
+             <tr><td>Eligible</td><td data-id=Eligible data-custom=1>
+                 <input name=Eligible id=Eligible type=radio value='Yes' />Yes
+                 &nbsp;&nbsp;&nbsp;<input name=Eligible type=radio value='No' />No
+            </td></tr>
+             <tr><td>Reason for ineligibility</td><td data-id=Reason_for_ineligibility></td></tr>
+             <tr><td>Face-Face Screening Consent</td><td data-id=Face_Face_Screening_Consent data-custom=1>
+                 <input name=Face_Face_Screening_Consent id=Face_Face_Screening_Consent type=radio value='Yes' />Yes
+                 &nbsp;&nbsp;&nbsp;<input name=Face_Face_Screening_Consent type=radio value='No' />No
+            </td></tr>
+             <tr><td>FF Screening Decline Reason</td><td data-id=FF_Screening_decline_reason></td></tr>
+             <tr><td>Baseline Consent?</td><td data-id=Baseline_Consent data-custom=1>
+                 <input name=Baseline_Consent id=Baseline_Consent type=radio value='Yes' />Yes
+                 &nbsp;&nbsp;&nbsp;<input name=Baseline_Consent type=radio value='No' />No
+            </td></tr>
+             <tr><td>Decline baseline</td><td data-id=Decline_baseline></td></tr>
+         </table>
+     </form>
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__COMPONENT__/grid/form.js
+        //----------------------------------
+        $('#D__ID').on('load',function(){
+            _init();
+            _field_process();
+            custom_field_process();
+        })
+        //----------------------------------
+        var custom_field_process=function(){
+            $('#tb__ID td[data-custom=1]').each(function(){
+                var field=$(this).attr('data-id');
+                switch(field){
+                    case "Consent_approached_research":
+                    case "Eligible":
+                    case "Face_Face_Screening_Consent":
+                    case "Baseline_Consent":
+                        $(this).find("input[name='"+field+"'][value='"+_records[I][field]+"']").prop('checked', true);
+                        $(this).find("input[name='"+field+"']").off('click').on('click',function(){
+                            _set_value(this.value,_records,I,field);
+                        })
+                    break;
+                    case "Age":
+                        $(this).find("input").val(_records[I][field]);
+                        $(this).find("input").blur(function(){
+                            _records[I][field]=this.value;
+                        })
+                    break;
+                }
+            })
+        }
+        //----------------------------------
+        _before_submit_form=function(){
+
+            return true;
+        }
+        //----------------------------------
+    }
+</script>
+<style>
+    VmInclude:__COMPONENT__/toolbar/toolbar.css
+    VmInclude:__COMPONENT__/grid/form.css
+    VmInclude:__BASE__/woolcock-imr/windfarm/assets/w3.css
+    .ui-datepicker{ z-index: 9999 !important;}
+    .inputbox__ID{width:50px;}
+    .subheader__ID {background-color:#B8BDBF;color:#000;text-align:left!Important;font-size:12px;padding:3px!Important;}
+
+</style>

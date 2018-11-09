@@ -1,0 +1,102 @@
+VmInclude:__COMPONENT__/toolbar/back.html
+<section>
+    <div id=qe_ID style='padding:50px'>
+        <ui id=items__ID>
+        </ui>
+    </div>
+</section>
+<script>
+    function F__ID(){
+        //---------------------------------
+        var _module_list=function(){
+            var L=$vm.module_list,A='woolcock_windfarm_screening_',B=$vm.hosting_path+'/woolcock-imr/windfarm';
+            var v={
+                app_id:A,
+            }
+            VmInclude:__BASE__/woolcock-imr/windfarm/modules/navigation/screening_participant_and_task_module_list.js
+        }
+        _module_list();
+        //---------------------------------------------
+        VmInclude:__COMPONENT__/toolbar/back.js
+        VmInclude:__COMPONENT__/style/ease-in-out.js
+        //---------------------------------
+        $('#D__ID').on('load',function(){ get_data(); })
+        $('#D__ID').on('refresh_back',function(){ get_data();  })
+        //---------------------------------
+        var get_data=function(){
+            //----------------------------------
+            //input
+            var participant=$vm.vm['__ID'].op.participant;
+            var participant_uid=$vm.vm['__ID'].op.participant_uid;
+            var task_list=$vm.vm['__ID'].op.task_list;
+            //----------------------------------
+            //display participant
+            $('#info__ID').text(participant);
+            //----------------------------------
+            //setup tasl LI list and sql for checking Completed task
+            var pids=task_list.split(',');
+            var txt="";
+            var sql="";
+            for(var i=0;i<pids.length;i++){
+                var pid=pids[i];
+                for(module in $vm.module_list){
+                    var nnn=$vm.module_list[module];
+                    if(nnn.table_id!==undefined && nnn.task!==undefined){
+                        var module_pid=nnn.table_id;
+                        if(pid==module_pid){
+                            txt+="<li id="+pid+" data-form_name="+module+">"+$vm.module_list[module].task+"</li>";
+                            break;
+                        }
+                    }
+                }
+                if(sql!=="") sql+=" union ";
+                sql+="select ID,PID from [FORM-"+pid+"] where puid=@I1";
+            }
+            $('#items__ID').html(txt);
+            //----------------------------------
+            var req={cmd:'query_records',sql:sql,i1:participant_uid};
+            if($vm.online_questionnaire===1)  req={cmd:'participant_task_status_v2',participant_username:$vm.user};
+            $VmAPI.request({data:req,callback:function(res){
+                //set the first hyper link for opening a task form
+                var done=0;
+                $('#items__ID li').each(function(){
+                    var $li=$(this);
+                    if(done===0){
+                        var li_pid=$li.attr('id');
+                        var found_pid=0;
+                        for(var i=0;i<res.records.length;i++){
+                            if(res.records[i]['PID']==li_pid){
+                                found_pid=1;
+                                break;
+                            }
+                        }
+                        if(found_pid===0){ //no record on server
+                            done=1;
+                            var txt=$li.html();
+                            var li_form_name=$li.attr('data-form_name');
+                            $li.html("<u style='cursor:pointer' data-form_name="+li_form_name+">"+txt+"</u>");
+                            $li.find('u').on('click',function(){
+                                var module_name=$(this).attr('data-form_name');
+                                var module_id=$vm.get_module_id({name:module_name});
+                                $('#new'+module_id).triggerHandler('click');
+                                $('#D'+module_id).triggerHandler('load_form_module',[{participant:participant,participant_uid:participant_uid,task_name:txt}]);
+                            });
+                            $vm.load_module_by_name(li_form_name,undefined,{});
+                        }
+                    }
+                });
+            }})
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    #D__ID,#pvdiv__ID{
+      font-size:10pt;
+      font-family: Verdana,Helvetica,Arial,sans-serif;
+      background: url("__HOST__/images//texture.png");
+    }
+    #D__ID{
+      /*background-color:#fff;*/
+    }
+</style>
